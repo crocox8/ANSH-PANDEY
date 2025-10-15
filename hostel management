@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Hostel Management System</title>
     <style>
+        /* General Styles */
         * { box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -13,7 +14,8 @@
             margin: 0;
             padding: 0;
             color: #333;
-            transition: background-color 0.3s, color 0.3s;
+            /* Transition for dark mode switch */
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
         body.dark-mode {
             background-color: #2c3e50;
@@ -26,16 +28,24 @@
             display: flex;
             align-items: center;
             position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .hamburger {
             font-size: 28px;
             cursor: pointer;
             margin-right: 20px;
+            /* Transition for hover effect */
+            transition: transform 0.3s ease;
+        }
+        .hamburger:hover {
+            transform: scale(1.1);
         }
         h1 {
             margin: 0;
             flex-grow: 1;
         }
+
+        /* Dropdown Menu Styles with Transitions */
         .dropdown-menu {
             position: absolute;
             top: 60px;
@@ -44,21 +54,47 @@
             border: 1px solid #ccc;
             box-shadow: 0 3px 8px rgba(0,0,0,0.2);
             border-radius: 5px;
-            display: none;
+            display: flex;
             flex-direction: column;
             min-width: 200px;
             z-index: 1000;
+            /* New: for smooth showing/hiding */
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .dropdown-menu.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
         }
         .dropdown-menu a {
             padding: 12px;
             text-decoration: none;
             color: #d63434;
             border-bottom: 1px solid #eee;
+            /* Transition for hover background/color */
+            transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
         }
         .dropdown-menu a:hover {
             background-color: #3498db;
             color: white;
+            padding-left: 18px; /* Slight movement on hover */
         }
+        body.dark-mode .dropdown-menu {
+            background-color: #34495e;
+            border-color: #555;
+        }
+        body.dark-mode .dropdown-menu a {
+            color: #ecf0f1;
+            border-bottom-color: #444;
+        }
+        body.dark-mode .dropdown-menu a:hover {
+             background-color: #e33636;
+        }
+
+        /* Container and Section Styles */
         .container {
             width: 90%;
             max-width: 1000px;
@@ -67,52 +103,111 @@
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            /* Transition for dark mode background */
+            transition: background 0.5s ease;
+        }
+        body.dark-mode .container {
+            background: #34495e;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
         }
         .section h2 {
             background-color: #a4088d;
             color: white;
-            padding: 10px;
+            padding: 12px; /* Slightly increased padding */
             border-radius: 5px;
-            margin-bottom: 15px;
+            margin-bottom: 20px; /* Increased margin */
+            /* Transition for box shadow on hover (not needed on h2, but good for interactive elements) */
         }
+
+        /* Section Transition (Fade In/Out) */
+        .section {
+            opacity: 1;
+            transition: opacity 0.5s ease-out; /* Fade transition */
+        }
+        .section.hidden {
+            display: none; /* Hide the element completely */
+            opacity: 0;
+        }
+        .section.fading-out {
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+        }
+
         .display-box {
             background: #ecf0f1;
-            padding: 12px;
+            padding: 15px;
             border-radius: 5px;
             white-space: pre-wrap;
             font-size: 16px;
+            margin-bottom: 15px; /* Added margin-bottom */
+            border-left: 5px solid #a4088d; /* Subtle accent */
+            /* Transition for dark mode background */
+            transition: background 0.5s ease, border-color 0.5s ease;
+        }
+        body.dark-mode .display-box {
+            background: #44617a;
+            border-left-color: #e33636;
         }
         iframe {
             width: 100%;
             height: 300px;
             border: none;
             border-radius: 5px;
+            margin-bottom: 15px;
         }
         .preview {
             margin-top: 15px;
             max-width: 200px;
             border-radius: 5px;
+            /* Transition for image scaling on hover (optional) */
+            transition: transform 0.3s ease;
         }
+        .preview:hover {
+             transform: scale(1.05);
+        }
+
+        /* Form Element Styles with Transitions */
         input[type="text"], input[type="email"], input[type="file"], textarea {
             width: 100%;
             padding: 12px;
             margin-top: 8px;
+            margin-bottom: 15px; /* Added margin-bottom */
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 16px;
+            /* Transition for border color on focus */
+            transition: border-color 0.3s ease, background-color 0.3s ease;
         }
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        body.dark-mode input[type="text"], body.dark-mode input[type="email"], body.dark-mode input[type="file"], body.dark-mode textarea {
+            background-color: #2c3e50;
+            border-color: #555;
+            color: #ecf0f1;
+        }
+
+        /* Button Styles with Transitions */
         button {
             background-color: #3498db;
             color: white;
             border: none;
             padding: 12px 20px;
-            margin-top: 15px;
+            margin-top: 5px; /* Adjusted margin */
             cursor: pointer;
             border-radius: 5px;
             font-size: 16px;
+            /* Transition for hover effects */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
         }
         button:hover {
             background-color: #2980b9;
+            transform: translateY(-2px); /* Subtle lift on hover */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        button:active {
+            transform: translateY(0); /* Press effect */
         }
         .notification {
             background-color: #27ae60;
@@ -121,6 +216,12 @@
             border-radius: 5px;
             margin-top: 15px;
             display: none;
+            /* Transition for smooth visibility */
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .notification.visible {
+            opacity: 1;
         }
         .dark-mode-toggle {
             position: absolute;
@@ -132,6 +233,11 @@
             border-radius: 5px;
             color: white;
             font-weight: bold;
+             /* Transition for hover effects */
+            transition: background 0.3s ease;
+        }
+        .dark-mode-toggle:hover {
+            background: #e33636;
         }
     </style>
 </head>
@@ -139,7 +245,7 @@
 <body>
 
     <header>
-        <div class="hamburger">&#9776;</div>
+        <div class="hamburger">☰</div>
         <h1>Hostel Management System</h1>
         <button class="dark-mode-toggle">Dark Mode</button>
         <div class="dropdown-menu" id="dropdown-menu">
@@ -154,21 +260,78 @@
     <script>
         const dropdownMenu = document.getElementById('dropdown-menu');
         document.querySelector('.hamburger').addEventListener('click', () => {
-            dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
+            dropdownMenu.classList.toggle('visible');
         });
         window.addEventListener('click', function(e) {
-            if (!dropdownMenu.contains(e.target) && !document.querySelector('.hamburger').contains(e.target)) {
-                dropdownMenu.style.display = 'none';
+            if (!dropdownMenu.contains(e.target) && !document.querySelector('.hamburger').contains(e.target) && dropdownMenu.classList.contains('visible')) {
+                dropdownMenu.classList.remove('visible');
             }
         });
         document.querySelector('.dark-mode-toggle').addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
         });
+
+        // Function to show notification with a fade-out
+        function showNotification(message) {
+             const container = document.querySelector('.container');
+             let notification = document.querySelector('.notification');
+             if (!notification) {
+                 notification = document.createElement('div');
+                 notification.classList.add('notification');
+                 container.prepend(notification); // Add it to the top of the container
+             }
+             notification.textContent = message;
+             notification.style.display = 'block';
+             setTimeout(() => notification.classList.add('visible'), 10); // Start fade in
+             setTimeout(() => {
+                 notification.classList.remove('visible');
+                 // Wait for fade out transition to finish before hiding display
+                 setTimeout(() => notification.style.display = 'none', 500);
+             }, 3000); // Hide after 3 seconds
+        }
+
+        function showSection(sectionId) {
+            const currentActiveSection = document.querySelector('.section:not(.hidden)');
+            const nextSection = document.getElementById(sectionId);
+
+            if (currentActiveSection && currentActiveSection !== nextSection) {
+                // 1. Fade out the current section
+                currentActiveSection.classList.add('fading-out');
+
+                // 2. After fade-out, hide it and fade in the next one
+                setTimeout(() => {
+                    currentActiveSection.classList.add('hidden');
+                    currentActiveSection.classList.remove('fading-out');
+
+                    // 3. Prepare the next section for fade-in
+                    nextSection.classList.remove('hidden');
+                    setTimeout(() => nextSection.style.opacity = '1', 10); // Give a small delay to trigger transition
+                }, 300); // Match this with the fading-out transition time
+            } else if (currentActiveSection === nextSection) {
+                // Do nothing if trying to click the current section
+            } else {
+                 // First load or if no active section found
+                 nextSection.classList.remove('hidden');
+                 nextSection.style.opacity = '1';
+            }
+
+            dropdownMenu.classList.remove('visible');
+        }
+
+        // Initialize: Ensure only home section is visible on load and set opacity to 1
+        document.addEventListener('DOMContentLoaded', () => {
+             document.querySelectorAll('.section').forEach(s => {
+                 if (s.id !== 'home-section') {
+                      s.classList.add('hidden');
+                 } else {
+                      s.style.opacity = '1';
+                 }
+             });
+        });
     </script>
 
     <div class="container">
-
-        <div id="home-section" class="section active">
+         <div id="home-section" class="section">
             <h2>Welcome to the Hostel Management System</h2>
             <div class="display-box">
                 Explore your dashboard to manage your profile, view announcements, and track fees with ease.
@@ -195,13 +358,13 @@
 
             <h2>Contact Admin</h2>
             <textarea id="contact-message" placeholder="Type your message here..."></textarea>
-            <button onclick="alert('Message sent to admin!')">Send Message</button>
+            <button onclick="showNotification('Message sent to admin!')">Send Message</button>
         </div>
 
         <div id="fees-section" class="section hidden">
             <h2>Fees Management</h2>
             <textarea>Standard hostel fees: ₹5000 per month.</textarea>
-            <button onclick="alert('Fees saved successfully.')">Save</button>
+            <button onclick="showNotification('Fees saved successfully.')">Save</button>
         </div>
 
         <div id="profile-section" class="section hidden">
@@ -213,13 +376,14 @@
             <label>Upload Photo:</label><input type="file" accept="image/*" onchange="previewPhoto()" />
             <img id="photo-preview" class="preview hidden" />
             <label>Upload Document:</label><input type="file" />
-            <button onclick="alert('Profile updated successfully.')">Save Profile</button>
+            <button onclick="showNotification('Profile updated successfully.')">Save Profile</button>
         </div>
 
         <div id="owner-section" class="section hidden">
             <h2>Owner Details</h2>
-            <textarea>Owner: Mr. Rajesh Kumar&#10;Contact: +91 9876543210</textarea>
-            <button onclick="alert('Owner details saved successfully.')">Save</button>
+            <textarea>Owner: Mr. Rajesh Kumar
+Contact: +91 9876543210</textarea>
+            <button onclick="showNotification('Owner details saved successfully.')">Save</button>
         </div>
 
         <div id="reminder-section" class="section hidden">
@@ -228,15 +392,10 @@
                 Reminder: Your fees are due by <strong>30th September</strong>.
             </div>
         </div>
-
     </div>
 
     <script>
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
-            document.getElementById(sectionId).classList.remove('hidden');
-            document.getElementById('dropdown-menu').style.display = 'none';
-        }
+        // NOTE: The showSection function is already defined above, but here's the photo preview function again:
 
         function previewPhoto() {
             const fileInput = document.querySelector('input[type="file"][accept="image/*"]');
