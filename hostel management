@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Hostel Management System</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+        header {
+            background-color: #e33636;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .hamburger {
+            font-size: 28px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        h1 {
+            margin: 0;
+            flex-grow: 1;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 60px;
+            left: 15px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            display: none;
+            flex-direction: column;
+            min-width: 200px;
+            z-index: 1000;
+        }
+        .dropdown-menu a {
+            padding: 12px;
+            text-decoration: none;
+            color: #d63434;
+            border-bottom: 1px solid #eee;
+        }
+        .dropdown-menu a:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            background-color: #a4088d;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .display-box {
+            background: #ecf0f1;
+            padding: 12px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-size: 16px;
+        }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 5px;
+        }
+        .preview {
+            margin-top: 15px;
+            max-width: 200px;
+            border-radius: 5px;
+        }
+        input[type="text"], input[type="email"], input[type="file"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin-top: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .notification {
+            background-color: #27ae60;
+            color: white;
+            padding: 12px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+        }
+        .dark-mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            background: #01060a;
+            padding: 8px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="hamburger">&#9776;</div>
+        <h1>Hostel Management System</h1>
+        <button class="dark-mode-toggle">Dark Mode</button>
+        <div class="dropdown-menu" id="dropdown-menu">
+            <a href="#home-section" onclick="showSection('home-section')">Home</a>
+            <a href="#fees-section" onclick="showSection('fees-section')">Fees Management</a>
+            <a href="#profile-section" onclick="showSection('profile-section')">User Profile</a>
+            <a href="#owner-section" onclick="showSection('owner-section')">Owner Details</a>
+            <a href="#reminder-section" onclick="showSection('reminder-section')">Fees Reminder</a>
+        </div>
+    </header>
+
+    <script>
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        document.querySelector('.hamburger').addEventListener('click', () => {
+            dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
+        });
+        window.addEventListener('click', function(e) {
+            if (!dropdownMenu.contains(e.target) && !document.querySelector('.hamburger').contains(e.target)) {
+                dropdownMenu.style.display = 'none';
+            }
+        });
+        document.querySelector('.dark-mode-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+
+    <div class="container">
+
+        <div id="home-section" class="section active">
+            <h2>Welcome to the Hostel Management System</h2>
+            <div class="display-box">
+                Explore your dashboard to manage your profile, view announcements, and track fees with ease.
+            </div>
+
+            <h2>Announcements</h2>
+            <div class="display-box">
+                🚨 Maintenance on 30th September. Keep your rooms ready.
+            </div>
+
+            <h2>Admin Details</h2>
+            <div class="display-box">
+                Mr. Rajesh Kumar<br/>
+                +91 9876543210
+            </div>
+
+            <h2>Locate Hostel</h2>
+            <iframe src="https://www.google.com/maps/embed?..."></iframe>
+
+            <h2>Fees Reminder</h2>
+            <div class="display-box">
+                Reminder: Your next fee is due by <strong>30th September</strong>.
+            </div>
+
+            <h2>Contact Admin</h2>
+            <textarea id="contact-message" placeholder="Type your message here..."></textarea>
+            <button onclick="alert('Message sent to admin!')">Send Message</button>
+        </div>
+
+        <div id="fees-section" class="section hidden">
+            <h2>Fees Management</h2>
+            <textarea>Standard hostel fees: ₹5000 per month.</textarea>
+            <button onclick="alert('Fees saved successfully.')">Save</button>
+        </div>
+
+        <div id="profile-section" class="section hidden">
+            <h2>User Profile</h2>
+            <label>Name:</label><input type="text" placeholder="Enter your name" />
+            <label>Father's Name:</label><input type="text" placeholder="Enter father's name" />
+            <label>College Name:</label><input type="text" placeholder="Enter college name" />
+            <label>Email:</label><input type="email" placeholder="Enter your email" />
+            <label>Upload Photo:</label><input type="file" accept="image/*" onchange="previewPhoto()" />
+            <img id="photo-preview" class="preview hidden" />
+            <label>Upload Document:</label><input type="file" />
+            <button onclick="alert('Profile updated successfully.')">Save Profile</button>
+        </div>
+
+        <div id="owner-section" class="section hidden">
+            <h2>Owner Details</h2>
+            <textarea>Owner: Mr. Rajesh Kumar&#10;Contact: +91 9876543210</textarea>
+            <button onclick="alert('Owner details saved successfully.')">Save</button>
+        </div>
+
+        <div id="reminder-section" class="section hidden">
+            <h2>Fees Reminder</h2>
+            <div class="display-box">
+                Reminder: Your fees are due by <strong>30th September</strong>.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById('dropdown-menu').style.display = 'none';
+        }
+
+        function previewPhoto() {
+            const fileInput = document.querySelector('input[type="file"][accept="image/*"]');
+            const previewImg = document.getElementById('photo-preview');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    previewImg.src = e.target.result;
+                    previewImg.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
+</body>
+</html>
