@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Hostel Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons (bell, stars, etc.) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styles */
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; } /* Smooth scrolling for anchor links */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7f6; /* Lighter, professional background */
+            margin: 0;
+            padding: 0;
+            color: #333;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        body.dark-mode {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+        header {
+            background-color: #1a237e; /* Deep indigo for a professional feel */
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .hamburger {
+            font-size: 28px;
+            cursor: pointer;
+            margin-right: 20px;
+            transition: transform 0.3s ease;
+        }
+        .hamburger:hover {
+            transform: scale(1.1);
+        }
+        h1 {
+            margin: 0;
+            flex-grow: 1;
+            font-weight: 700;
+            font-size: 1.8em;
+        }
+
+        /* Dropdown Menu Styles with Transitions */
+        .dropdown-menu {
+            position: absolute;
+            top: 65px; /* Adjusted to look better */
+            left: 25px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 8px; /* Slightly more rounded */
+            display: flex;
+            flex-direction: column;
+            min-width: 220px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .dropdown-menu.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        .dropdown-menu a {
+            padding: 14px 20px; /* More generous padding */
+            text-decoration: none;
+            color: #3f51b5; /* Complementary blue */
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+        }
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+        .dropdown-menu a:hover {
+            background-color: #e8f0fe; /* Light hover effect */
+            color: #1a237e;
+            padding-left: 25px;
+        }
+        body.dark-mode .dropdown-menu {
+            background-color: #34495e;
+            border-color: #555;
+        }
+        body.dark-mode .dropdown-menu a {
+            color: #bbdefb; /* Lighter text in dark mode */
+            border-bottom-color: #444;
+        }
+        body.dark-mode .dropdown-menu a:hover {
+             background-color: #2c3e50; /* Darker hover in dark mode */
+             color: white;
+        }
+
+        /* Container and Section Styles */
+        .container {
+            width: 90%;
+            max-width: 1100px; /* Slightly wider container */
+            margin: 30px auto;
+            background: white;
+            padding: 30px; /* More padding */
+            border-radius: 10px; /* More rounded corners */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: background 0.5s ease;
+        }
+        body.dark-mode .container {
+            background: #34495e;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .section h2 {
+            background-color: #e3f2fd; /* Very light blue for headings */
+            color: #1a237e; /* Dark blue text */
+            padding: 15px 20px; /* Increased padding */
+            border-radius: 6px;
+            margin-bottom: 25px; /* Increased margin */
+            font-weight: 700;
+            font-size: 1.5em;
+            border-left: 5px solid #3f51b5; /* Accent border */
+        }
+        body.dark-mode .section h2 {
+            background-color: #2c3e50;
+            color: #bbdefb;
+            border-left-color: #bbdefb;
+        }
+
+        /* Section Transition (Fade In/Out) */
+        .section {
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+        .section.hidden {
+            display: none;
+            opacity: 0;
+        }
+        .section.fading-out {
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+        }
+
+        .display-box {
+            background: #fcfcfc; /* Cleaner white */
+            padding: 18px; /* More padding */
+            border-radius: 8px;
+            white-space: pre-wrap;
+            font-size: 1.05em; /* Slightly larger font */
+            line-height: 1.6; /* Improved readability */
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0; /* Subtle border */
+            transition: background 0.5s ease, border-color 0.5s ease;
+        }
+        body.dark-mode .display-box {
+            background: #44617a;
+            border-color: #555;
+        }
+        iframe {
+            width: 100%;
+            height: 350px; /* Taller iframe */
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .preview {
+            margin-top: 15px;
+            max-width: 250px; /* Larger preview */
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .preview:hover {
+             transform: scale(1.02);
+             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Form Element Styles with Transitions */
+        input[type="text"], input[type="email"], input[type="file"], textarea, select, input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 18px; /* Increased margin */
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.2s ease;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus, select:focus, input[type="date"]:focus {
+            border-color: #3f51b5; /* Professional blue focus */
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.2); /* Subtle glow on focus */
+        }
+        body.dark-mode input[type="text"], body.dark-mode input[type="email"], body.dark-mode input[type="file"], body.dark-mode textarea, body.dark-mode select, body.dark-mode input[type="date"] {
+            background-color: #2c3e50;
+            border-color: #555;
+            color: #ecf0f1;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        body.dark-mode label {
+            color: #ccc;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+
+        /* Button Styles with Transitions */
+        button {
+            background-color: #3f51b5; /* Professional blue */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin-top: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        button:hover {
+            background-color: #303f9f; /* Darker blue on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        button.secondary {
+            background-color: #6c757d;
+        }
+        button.secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .notification {
+            background-color: #4caf50; /* Green for success */
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            font-weight: 500;
+        }
+        .notification.visible {
+            opacity: 1;
+        }
+        .dark-mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            cursor: pointer;
+            background: #263238; /* Darker background for toggle */
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+            z-index: 1001; /* Ensure it's above dropdown */
+        }
+        .dark-mode-toggle:hover {
+            background: #455a64;
+        }
+
+        /* Specific styles for existing sections */
+        .review-item {
+            background-color: #f0f4f8; /* Light background for review items */
+            border-left: 4px solid #3f51b5;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .review-item strong {
+            color: #1a237e;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .review-item span {
+            font-size: 0.9em;
+            color: #666;
+        }
+        body.dark-mode .review-item {
+            background-color: #44617a;
+            border-left-color: #bbdefb;
+        }
+        body.dark-mode .review-item strong {
+            color: #e3f2fd;
+        }
+        body.dark-mode .review-item span {
+            color: #ccc;
+        }
+
+        .room-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .room-card {
+            background-color: #f0f4f8;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .room-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .room-card.available {
+            border-bottom: 4px solid #4caf50; /* Green for available */
+            color: #2e7d32;
+        }
+        .room-card.occupied {
+            border-bottom: 4px solid #f44336; /* Red for occupied */
+            color: #c62828;
+        }
+        .room-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .room-card p {
+            font-size: 0.9em;
+            margin: 0;
+            color: #555;
+        }
+        body.dark-mode .room-card {
+            background-color: #44617a;
+        }
+        body.dark-mode .room-card.available {
+            border-bottom-color: #81c784;
+            color: #a5d6a7;
+        }
+        body.dark-mode .room-card.occupied {
+            border-bottom-color: #ef9a9a;
+            color: #ef9a9a;
+        }
+        body.dark-mode .room-card h3, body.dark-mode .room-card p {
+            color: #e3f2fd;
+        }
+
+        /* NEW FEATURES CSS */
+
+        /* Notification Bell */
+        .notification-icon {
+            position: absolute;
+            top: 15px;
+            right: 120px; /* Adjusted to make space for Dark Mode toggle */
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.3s ease;
+            z-index: 1001; /* Ensure it's above dropdown */
+        }
+        .notification-icon:hover {
+            transform: scale(1.1);
+        }
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: -5px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 3px 7px;
+            font-size: 0.7em;
+            font-weight: bold;
+            display: none; /* Hidden by default */
+        }
+        .notification-panel {
+            position: absolute;
+            top: 65px;
+            right: 25px;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .notification-panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        .notification-panel h3 {
+            margin: 0;
+            padding: 15px;
+            background-color: #f0f4f8;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.1em;
+            color: #1a237e;
+        }
+        .notification-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f7f7f7;
+            font-size: 0.9em;
+            color: #555;
+            transition: background-color 0.2s ease;
+        }
+        .notification-item:hover {
+            background-color: #f0f4f8;
+        }
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        .notification-panel .empty-message {
+            padding: 15px;
+            text-align: center;
+            color: #777;
+        }
+        body.dark-mode .notification-panel {
+            background-color: #34495e;
+            border-color: #555;
+        }
+        body.dark-mode .notification-panel h3 {
+            background-color: #2c3e50;
+            border-bottom-color: #444;
+            color: #bbdefb;
+        }
+        body.dark-mode .notification-item {
+            color: #ccc;
+            border-bottom-color: #444;
+        }
+        body.dark-mode .notification-item:hover {
+            background-color: #2c3e50;
+        }
+
+
+        /* Edit Profile Mode */
+        #profile-section .profile-field-display {
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            background-color: #f8f8f8;
+            color: #333;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+        body.dark-mode #profile-section .profile-field-display {
+            background-color: #44617a;
+            border-color: #555;
+            color: #ecf0f1;
+        }
+        #profile-section.edit-mode input,
+        #profile-section.edit-mode .profile-field-display {
+            display: block; /* Show inputs in edit mode */
+        }
+        #profile-section:not(.edit-mode) input:not([type="file"]),
+        #profile-section:not(.edit-mode) button:not(#edit-profile-btn) {
+            display: none; /* Hide inputs and save button in view mode */
+        }
+        #profile-section:not(.edit-mode) #edit-profile-btn {
+            display: block; /* Show edit button in view mode */
+        }
+        #profile-section.edit-mode #edit-profile-btn {
+            display: none; /* Hide edit button in edit mode */
+        }
+
+        /* Loading Indicator */
+        .loading-spinner {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            -webkit-animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { -webkit-transform: rotate(360deg); }
+        }
+        @-webkit-keyframes spin {
+            to { -webkit-transform: rotate(360deg); }
+        }
+        button.loading {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Rate My Stay Stars */
+        .star-rating {
+            display: inline-block;
+            font-size: 1.8em;
+            cursor: pointer;
+            color: #ccc; /* Default star color */
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .star-rating .fa-star {
+            transition: color 0.2s ease;
+        }
+        .star-rating .fa-star.checked,
+        .star-rating .fa-star:hover,
+        .star-rating .fa-star:hover ~ .fa-star {
+            color: #f39c12; /* Gold color for selected/hovered stars */
+        }
+        body.dark-mode .star-rating .fa-star.checked,
+        body.dark-mode .star-rating .fa-star:hover,
+        body.dark-mode .star-rating .fa-star:hover ~ .fa-star {
+            color: #f7dc6f;
+        }
+
+        /* Gallery Section */
+        #gallery-section .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        #gallery-section .gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        #gallery-section .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        #gallery-section .gallery-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+        #gallery-section .gallery-item p {
+            padding: 10px;
+            margin: 0;
+            background-color: #f8f8f8;
+            font-size: 0.9em;
+            color: #555;
+            text-align: center;
+        }
+        body.dark-mode #gallery-section .gallery-item p {
+            background-color: #44617a;
+            color: #ecf0f1;
+        }
+
+        /* Lightbox Modal */
+        .lightbox-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .lightbox-modal.visible {
+            display: flex;
+            opacity: 1;
+        }
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            animation: zoomIn 0.3s ease-out;
+        }
+        .lightbox-content img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 70vh; /* Limit height to 70% of viewport height */
+            display: block;
+            margin: 0 auto 15px auto;
+            border-radius: 5px;
+        }
+        .lightbox-caption {
+            color: #333;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        .lightbox-close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .lightbox-close:hover,
+        .lightbox-close:focus {
+            color: #e74c3c;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        body.dark-mode .lightbox-content {
+            background-color: #34495e;
+        }
+        body.dark-mode .lightbox-caption {
+            color: #ecf0f1;
+        }
+        body.dark-mode .lightbox-close {
+            color: #ccc;
+        }
+        body.dark-mode .lightbox-close:hover,
+        body.dark-mode .lightbox-close:focus {
+            color: #ef9a9a;
+        }
+
+        /* FAQ Section */
+        .faq-item {
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fcfcfc;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .faq-question {
+            padding: 15px;
+            background-color: #f0f4f8;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #1a237e;
+            transition: background-color 0.2s ease;
+        }
+        .faq-question:hover {
+            background-color: #e8f0fe;
+        }
+        .faq-question .icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        .faq-answer {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            color: #555;
+            line-height: 1.6;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 150px; /* Adjust as needed for content */
+            padding: 15px;
+        }
+        .faq-item.active .faq-question .icon {
+            transform: rotate(180deg);
+        }
+        body.dark-mode .faq-item {
+            background-color: #34495e;
+            border-color: #555;
+        }
+        body.dark-mode .faq-question {
+            background-color: #2c3e50;
+            color: #bbdefb;
+        }
+        body.dark-mode .faq-question:hover {
+            background-color: #44617a;
+        }
+        body.dark-mode .faq-answer {
+            color: #ccc;
+        }
+
+        /* Mess Menu & Events Section Basic Styles */
+        .menu-item, .event-item {
+            background-color: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-left: 4px solid #3f51b5;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            transition: background-color 0.3s ease;
+        }
+        .menu-item strong, .event-item strong {
+            color: #1a237e;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+        .menu-item p, .event-item p {
+            margin: 0;
+            color: #555;
+        }
+        body.dark-mode .menu-item, body.dark-mode .event-item {
+            background-color: #44617a;
+            border-color: #555;
+            border-left-color: #bbdefb;
+        }
+        body.dark-mode .menu-item strong, body.dark-mode .event-item strong {
+            color: #e3f2fd;
+        }
+        body.dark-mode .menu-item p, body.dark-mode .event-item p {
+            color: #ccc;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .search-container input[type="text"] {
+            flex-grow: 1;
+            margin-bottom: 0; /* Override default margin */
+        }
+        .search-container button {
+            margin-top: 0; /* Override default margin */
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="hamburger">☰</div>
+        <h1>Hostel Management System</h1>
+        <!-- Notification Bell Icon -->
+        <div class="notification-icon" id="notification-icon">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notification-badge">0</span>
+        </div>
+        <button class="dark-mode-toggle">Dark Mode</button>
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown-menu" id="dropdown-menu">
+            <a href="#home-section" onclick="showSection('home-section')">Home</a>
+            <a href="#fees-section" onclick="showSection('fees-section')">Fees Management</a>
+            <a href="#profile-section" onclick="showSection('profile-section')">User Profile</a>
+            <a href="#owner-section" onclick="showSection('owner-section')">Owner Details</a>
+            <a href="#reminder-section" onclick="showSection('reminder-section')">Fees Reminder</a>
+            <a href="#reviews-section" onclick="showSection('reviews-section')">Reviews</a>
+            <a href="#room-availability-section" onclick="showSection('room-availability-section')">Room Availability</a>
+            <a href="#gallery-section" onclick="showSection('gallery-section')">Hostel Gallery</a>
+            <a href="#maintenance-request-section" onclick="showSection('maintenance-request-section')">Maintenance Request</a>
+            <a href="#mess-menu-section" onclick="showSection('mess-menu-section')">Mess Menu</a>
+            <a href="#events-section" onclick="showSection('events-section')">Events Calendar</a>
+            <a href="#faq-section" onclick="showSection('faq-section')">FAQ / Help</a>
+        </div>
+
+        <!-- Notification Panel -->
+        <div class="notification-panel" id="notification-panel">
+            <h3>Notifications <span id="notification-count">(0)</span></h3>
+            <div id="notification-list">
+                <p class="empty-message">No new notifications.</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+         <div id="home-section" class="section">
+            <h2 id="welcome-message">Welcome to the Hostel Management System</h2>
+            <div class="display-box">
+                Explore your dashboard to manage your profile, view announcements, and track fees with ease.
+            </div>
+
+            <h2>Announcements</h2>
+            <div class="search-container">
+                <input type="text" id="announcement-search" placeholder="Search announcements..." onkeyup="filterAnnouncements()" />
+                <button onclick="filterAnnouncements()">Search</button>
+            </div>
+            <div class="announcements-list">
+                <div class="display-box announcement-item">
+                    🚨 Important: Annual hostel maintenance will be carried out on <strong>October 15th-17th</strong>. Please secure your belongings.
+                </div>
+                <div class="display-box announcement-item">
+                    🥳 Cultural Fest on October 25th! Register for events by Oct 10th.
+                </div>
+                <div class="display-box announcement-item">
+                    ⚠️ Water supply interruption in Block A on September 28th, 9 AM - 1 PM.
+                </div>
+            </div>
+
+
+            <h2>Admin Details</h2>
+            <div class="display-box">
+                <strong>Mr. Rajesh Kumar</strong><br/>
+                Contact: +91 9876543210<br/>
+                Email: rajesh.kumar@hostel.com
+            </div>
+
+            <h2>Locate Hostel</h2>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15226.70291079313!2d78.43859665!3d17.43306915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcbd8a65f81c95b%3A0x6d9f8e4e7e6f8f!2sJubilee%20Hills%2C%20Hyderabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1678888888888!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
+
+            <h2>Fees Reminder</h2>
+            <div class="display-box">
+                Reminder: Your next fee installment of <strong>₹5000</strong> is due by <strong>September 30th</strong>. Please ensure timely payment to avoid late fees.
+            </div>
+
+            <h2>Contact Admin</h2>
+            <textarea id="contact-message" placeholder="Type your message or inquiry here..." rows="4"></textarea>
+            <button onclick="sendMessageToAdmin(this)">Send Message</button>
+
+            <h2>Rate My Stay</h2>
+            <div class="star-rating" id="rate-my-stay-stars">
+                <i class="far fa-star" data-rating="1"></i>
+                <i class="far fa-star" data-rating="2"></i>
+                <i class="far fa-star" data-rating="3"></i>
+                <i class="far fa-star" data-rating="4"></i>
+                <i class="far fa-star" data-rating="5"></i>
+            </div>
+            <textarea id="feedback-comment" placeholder="Any additional feedback?"></textarea>
+            <button onclick="submitFeedback(this)">Submit Feedback</button>
+        </div>
+
+        <div id="fees-section" class="section hidden">
+            <h2>Fees Management</h2>
+            <div class="form-group">
+                <label for="fees-amount">Current Monthly Fees:</label>
+                <input type="text" id="fees-amount" value="₹5000" readonly />
+            </div>
+            <div class="form-group">
+                <label for="payment-status-display">Your Payment Status:</label>
+                <div class="display-box" id="payment-status-display">
+                    Last Payment: August 25, 2023 (₹5000)<br>
+                    Next Due Date: September 30, 2023<br>
+                    Status: <strong style="color: #e67e22;">Pending</strong>
+                </div>
+            </div>
+            <button onclick="markFeesPaid(this)">Mark Fees as Paid (Simulated)</button>
+            <button onclick="showNotification('Fees details refreshed.');" class="secondary">Refresh Status</button>
+        </div>
+
+        <div id="profile-section" class="section hidden">
+            <h2>User Profile</h2>
+            <div class="form-group">
+                <label>Name:</label>
+                <div class="profile-field-display" id="display-user-name"></div>
+                <input type="text" id="user-name" placeholder="Enter your full name" required />
+                <span class="error-message" id="error-user-name"></span>
+            </div>
+            <div class="form-group">
+                <label>Father's Name:</label>
+                <div class="profile-field-display" id="display-father-name"></div>
+                <input type="text" id="father-name" placeholder="Enter father's name" required />
+                <span class="error-message" id="error-father-name"></span>
+            </div>
+            <div class="form-group">
+                <label>College Name:</label>
+                <div class="profile-field-display" id="display-college-name"></div>
+                <input type="text" id="college-name" placeholder="Enter college name" required />
+                <span class="error-message" id="error-college-name"></span>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <div class="profile-field-display" id="display-user-email"></div>
+                <input type="email" id="user-email" placeholder="Enter your email" required />
+                <span class="error-message" id="error-user-email"></span>
+            </div>
+            <div class="form-group">
+                <label>Room Number:</label>
+                <div class="profile-field-display" id="display-room-number">B-203</div>
+                <input type="text" id="room-number" placeholder="Enter your room number" value="B-203" readonly style="display: none;" />
+            </div>
+            <div class="form-group">
+                <label for="upload-photo">Upload Photo:</label>
+                <input type="file" id="upload-photo" accept="image/*" onchange="previewPhoto()" />
+                <img id="photo-preview" class="preview hidden" alt="Profile Preview" />
+            </div>
+            <div class="form-group">
+                <label for="upload-doc">Upload Document (ID Proof, etc.):</label>
+                <input type="file" id="upload-doc" />
+            </div>
+            <button id="edit-profile-btn" onclick="toggleEditMode()">Edit Profile</button>
+            <button id="save-profile-btn" onclick="saveProfile(this)">Save Profile</button>
+            <button id="cancel-edit-btn" onclick="toggleEditMode()" class="secondary">Cancel</button>
+        </div>
+
+        <div id="owner-section" class="section hidden">
+            <h2>Owner Details</h2>
+            <label for="owner-info">Hostel Owner Information:</label>
+            <textarea id="owner-info" rows="5" readonly>Owner: Mr. Rajesh Kumar
+Contact: +91 9876543210
+Email: rajesh.kumar@hostelowner.com
+Address: 123 Hostel Lane, Cityville, State - 123456
+</textarea>
+            <button onclick="showNotification('Owner details refreshed.')">Refresh Details</button>
+        </div>
+
+        <div id="reminder-section" class="section hidden">
+            <h2>Fees Reminder</h2>
+            <div class="display-box">
+                Your monthly hostel fees of <strong>₹5000</strong> are due by <strong>September 30th, 2023</strong>.
+                <br><br>
+                Please ensure payment is made on or before the due date to avoid a late fee of ₹200.
+                You can pay through the designated payment portal or contact the admin for alternative methods.
+            </div>
+            <div class="form-group">
+                <label for="set-reminder">Set Custom Reminder:</label>
+                <input type="date" id="set-reminder" />
+            </div>
+            <button onclick="setCustomReminder(this)">Set Reminder</button>
+        </div>
+
+        <div id="reviews-section" class="section hidden">
+            <h2>Hostel Reviews</h2>
+            <div class="search-container">
+                <input type="text" id="review-search" placeholder="Search reviews..." onkeyup="filterReviews()" />
+                <button onclick="filterReviews()">Search</button>
+            </div>
+            <div id="reviews-list">
+                <!-- Reviews will be loaded here by JavaScript -->
+            </div>
+            <h3>Submit Your Review</h3>
+            <div class="form-group">
+                <label for="reviewer-name">Your Name:</label>
+                <input type="text" id="reviewer-name" placeholder="Enter your name" required />
+                <span class="error-message" id="error-reviewer-name"></span>
+            </div>
+            <div class="form-group">
+                <label for="review-text">Your Review:</label>
+                <textarea id="review-text" placeholder="Share your experience..." rows="5" required></textarea>
+                <span class="error-message" id="error-review-text"></span>
+            </div>
+            <button onclick="submitReview(this)">Submit Review</button>
+        </div>
+
+        <div id="room-availability-section" class="section hidden">
+            <h2>Room Availability</h2>
+            <div class="search-container">
+                <label for="room-type-filter">Filter by Room Type:</label>
+                <select id="room-type-filter" onchange="filterRooms()">
+                    <option value="all">All Types</option>
+                    <option value="single">Single</option>
+                    <option value="double">Double</option>
+                    <option value="triple">Triple</option>
+                </select>
+                <label for="room-ac-filter">AC/Non-AC:</label>
+                <select id="room-ac-filter" onchange="filterRooms()">
+                    <option value="all">Both</option>
+                    <option value="ac">AC</option>
+                    <option value="non-ac">Non-AC</option>
+                </select>
+            </div>
+            <div class="room-status" id="room-status-grid">
+                <!-- Room cards will be loaded here by JavaScript -->
+            </div>
+            <button onclick="showNotification('Room availability updated.')">Refresh Availability</button>
+        </div>
+
+        <div id="gallery-section" class="section hidden">
+            <h2>Hostel Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item" onclick="openLightbox('https://via.placeholder.com/800x600/3F51B5/FFFFFF?text=Hostel+Room+1', 'Cozy Single Room')">
+                    <img src="https://via.placeholder.com/300x200/3F51B5/FFFFFF?text=Room+1" alt="Hostel Room 1">
+                    <p>Single Room</p>
+                </div>
+                <div class="gallery-item" onclick="openLightbox('https://via.placeholder.com/800x600/1A237E/FFFFFF?text=Common+Area', 'Spacious Common Area')">
+                    <img src="https://via.placeholder.com/300x200/1A237E/FFFFFF?text=Common+Area" alt="Common Area">
+                    <p>Common Area</p>
+                </div>
+                <div class="gallery-item" onclick="openLightbox('https://via.placeholder.com/800x600/F39C12/FFFFFF?text=Mess+Hall', 'Hygienic Mess Hall')">
+                    <img src="https://via.placeholder.com/300x200/F39C12/FFFFFF?text=Mess+Hall" alt="Mess Hall">
+                    <p>Mess Hall</p>
+                </div>
+                <div class="gallery-item" onclick="openLightbox('https://via.placeholder.com/800x600/4CAF50/FFFFFF?text=Double+Room', 'Comfortable Double Room')">
+                    <img src="https://via.placeholder.com/300x200/4CAF50/FFFFFF?text=Double+Room" alt="Double Room">
+                    <p>Double Room</p>
+                </div>
+                <div class="gallery-item" onclick="openLightbox('https://via.placeholder.com/800x600/9C27B0/FFFFFF?text=Study+Lounge', 'Quiet Study Lounge')">
+                    <img src="https://via.placeholder.com/300x200/9C27B0/FFFFFF?text=Study+Lounge" alt="Study Lounge">
+                    <p>Study Lounge</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="maintenance-request-section" class="section hidden">
+            <h2>Submit Maintenance Request</h2>
+            <div class="form-group">
+                <label for="maintenance-title">Problem Title:</label>
+                <input type="text" id="maintenance-title" placeholder="e.g., Leaky Faucet, Broken Fan" required />
+                <span class="error-message" id="error-maintenance-title"></span>
+            </div>
+            <div class="form-group">
+                <label for="maintenance-category">Category:</label>
+                <select id="maintenance-category" required>
+                    <option value="">Select Category</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="electrical">Electrical</option>
+                    <option value="carpentry">Carpentry</option>
+                    <option value="cleaning">Cleaning</option>
+                    <option value="other">Other</option>
+                </select>
+                <span class="error-message" id="error-maintenance-category"></span>
+            </div>
+            <div class="form-group">
+                <label for="maintenance-urgency">Urgency:</label>
+                <select id="maintenance-urgency" required>
+                    <option value="">Select Urgency</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <span class="error-message" id="error-maintenance-urgency"></span>
+            </div>
+            <div class="form-group">
+                <label for="maintenance-description">Detailed Description:</label>
+                <textarea id="maintenance-description" placeholder="Describe the issue in detail..." rows="5" required></textarea>
+                <span class="error-message" id="error-maintenance-description"></span>
+            </div>
+            <div class="form-group">
+                <label for="maintenance-location">Room/Location:</label>
+                <input type="text" id="maintenance-location" placeholder="e.g., Room B-203, Common Bathroom" value="Room B-203" readonly />
+            </div>
+            <button onclick="submitMaintenanceRequest(this)">Submit Request</button>
+
+            <h3>My Active Requests</h3>
+            <div id="my-maintenance-requests" class="display-box">
+                <p class="empty-message">No active maintenance requests.</p>
+            </div>
+        </div>
+
+        <div id="mess-menu-section" class="section hidden">
+            <h2>Weekly Mess Menu</h2>
+            <div class="menu-items">
+                <div class="menu-item">
+                    <strong>Monday</strong>
+                    <p>Breakfast: Poha, Tea</p>
+                    <p>Lunch: Dal, Rice, Roti, Seasonal Veg</p>
+                    <p>Dinner: Chicken Curry/Paneer Butter Masala, Rice, Roti</p>
+                </div>
+                <div class="menu-item">
+                    <strong>Tuesday</strong>
+                    <p>Breakfast: Idli, Sambar, Chutney</p>
+                    <p>Lunch: Rajma, Rice, Roti, Salad</p>
+                    <p>Dinner: Veg Pulao, Raita</p>
+                </div>
+                <div class="menu-item">
+                    <strong>Wednesday</strong>
+                    <p>Breakfast: Aloo Paratha, Curd</p>
+                    <p>Lunch: Chole, Puri, Onion Salad</p>
+                    <p>Dinner: Egg Curry/Mix Veg, Rice, Roti</p>
+                </div>
+                <div class="menu-item">
+                    <strong>Thursday</strong>
+                    <p>Breakfast: Upma, Coffee</p>
+                    <p>Lunch: Kadhi Pakora, Rice, Roti, Fryums</p>
+                    <p>Dinner: Masoor Dal, Rice, Roti, Green Salad</p>
+                </div>
+                <div class="menu-item">
+                    <strong>Friday</strong>
+                    <p>Breakfast: Bread Butter/Jam, Milk</p>
+                    <p>Lunch: Biryani (Veg/Chicken), Raita</p>
+                    <p>Dinner: Pav Bhaji</p>
+                </div>
+                <div class="menu-item">
+                    <strong>Saturday</strong>
+                    <p>Breakfast: Dosa, Sambar, Chutney</p>
+                    <p>Lunch: Aloo Gobi, Dal, Rice, Roti</p>
+                    <p>Dinner: Chowmein (Veg/Egg), Manchurian</p>
+                </div>
+                <div class="menu-item">
+                    <strong>Sunday</strong>
+                    <p>Breakfast: Puri Bhaji</p>
+                    <p>Lunch: Special Lunch (Varies Weekly)</p>
+                    <p>Dinner: Pasta (White Sauce/Red Sauce)</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="events-section" class="section hidden">
+            <h2>Hostel Events Calendar</h2>
+            <div class="event-items">
+                <div class="event-item">
+                    <strong>Cultural Fest - "Expressions 2023"</strong>
+                    <p>Date: October 25, 2023</p>
+                    <p>Time: 6:00 PM onwards</p>
+                    <p>Location: Hostel Auditorium</p>
+                    <p>Description: An evening of music, dance, and drama by hostel residents. Open to all!</p>
+                </div>
+                <div class="event-item">
+                    <strong>Diwali Celebration & Potluck</strong>
+                    <p>Date: November 12, 2023</p>
+                    <p>Time: 7:00 PM onwards</p>
+                    <p>Location: Common Area Terrace</p>
+                    <p>Description: Celebrate Diwali with fellow residents. Bring your favorite dish to share!</p>
+                </div>
+                <div class="event-item">
+                    <strong>Quarterly Residents Meeting</strong>
+                    <p>Date: October 5, 2023</p>
+                    <p>Time: 8:00 PM</p>
+                    <p>Location: Mess Hall</p>
+                    <p>Description: Discuss hostel policies, feedback, and upcoming initiatives.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="faq-section" class="section hidden">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What are the hostel timings?</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Entry and exit gates are open from 6:00 AM to 10:00 PM. Residents must sign in/out at the security desk outside these hours.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How can I pay my fees?</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Fees can be paid online via bank transfer to the hostel's official account or directly to the admin office during working hours. Details are available in the Fees Management section.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What if I need maintenance in my room?</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Please submit a maintenance request through the 'Maintenance Request' section in your dashboard. Our team will address it promptly.</p>
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Are guests allowed in the hostel?</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Day guests are permitted in common areas until 8:00 PM. Overnight guests are generally not allowed without prior approval from the administration and may incur charges.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is there Wi-Fi available?</span>
+                        <i class="fas fa-chevron-down icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, complimentary Wi-Fi is available throughout the hostel premises. Please contact the admin for login credentials.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Lightbox Modal HTML -->
+    <div id="lightbox-modal" class="lightbox-modal">
+        <div class="lightbox-content">
+            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+            <img id="lightbox-image" src="" alt="Hostel Image">
+            <p id="lightbox-caption" class="lightbox-caption"></p>
+        </div>
+    </div>
+
+    <script>
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        const notificationIcon = document.getElementById('notification-icon');
+        const notificationPanel = document.getElementById('notification-panel');
+        const notificationBadge = document.getElementById('notification-badge');
+        const notificationList = document.getElementById('notification-list');
+        const notificationCountDisplay = document.getElementById('notification-count');
+
+        document.querySelector('.hamburger').addEventListener('click', () => {
+            dropdownMenu.classList.toggle('visible');
+            notificationPanel.classList.remove('visible'); // Close notification panel if open
+        });
+
+        notificationIcon.addEventListener('click', (e) => {
+            notificationPanel.classList.toggle('visible');
+            dropdownMenu.classList.remove('visible'); // Close dropdown if open
+            if (notificationPanel.classList.contains('visible')) {
+                // When panel is opened, clear new notification badge
+                clearNotificationBadge();
+            }
+        });
+
+        window.addEventListener('click', function(e) {
+            // Close dropdown if click outside
+            if (!dropdownMenu.contains(e.target) && !document.querySelector('.hamburger').contains(e.target) && dropdownMenu.classList.contains('visible')) {
+                dropdownMenu.classList.remove('visible');
+            }
+            // Close notification panel if click outside
+            if (!notificationPanel.contains(e.target) && !notificationIcon.contains(e.target) && notificationPanel.classList.contains('visible')) {
+                notificationPanel.classList.remove('visible');
+            }
+        });
+
+        document.querySelector('.dark-mode-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            // Save dark mode preference
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('dark-mode', 'enabled');
+            } else {
+                localStorage.removeItem('dark-mode');
+            }
+        });
+
+        // Load dark mode preference on page load
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // --- Notification System Logic ---
+        let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+        function updateNotificationBadge() {
+            const unreadCount = notifications.filter(n => !n.read).length;
+            notificationBadge.textContent = unreadCount;
+            notificationCountDisplay.textContent = `(${unreadCount})`;
+            notificationBadge.style.display = unreadCount > 0 ? 'block' : 'none';
+        }
+
+        function renderNotifications() {
+            notificationList.innerHTML = '';
+            if (notifications.length === 0) {
+                notificationList.innerHTML = '<p class="empty-message">No new notifications.</p>';
+            } else {
+                notifications.forEach((note, index) => {
+                    const item = document.createElement('div');
+                    item.classList.add('notification-item');
+                    if (!note.read) item.style.fontWeight = 'bold'; // Highlight unread
+                    item.textContent = note.message;
+                    item.addEventListener('click', () => {
+                        notifications[index].read = true;
+                        localStorage.setItem('notifications', JSON.stringify(notifications));
+                        renderNotifications(); // Re-render to update read status
+                        updateNotificationBadge();
+                        // You could add logic here to navigate to a section based on notification type
+                    });
+                    notificationList.prepend(item); // Add newest first
+                });
+            }
+            updateNotificationBadge();
+        }
+
+        function addNotification(message) {
+            notifications.push({ message: message, read: false, timestamp: new Date().toISOString() });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            renderNotifications();
+            showNotification(message); // Also show the transient notification
+        }
+
+        function clearNotificationBadge() {
+             // Mark all currently visible notifications as read when panel is opened
+            notifications = notifications.map(n => ({ ...n, read: true }));
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            updateNotificationBadge();
+            renderNotifications(); // Re-render to update styles (remove bold)
+        }
+
+        // --- Generic showNotification function (already existing, but now also adds to persistent list) ---
+        function showNotification(message) {
+             const container = document.querySelector('.container');
+             let notification = document.querySelector('.notification');
+             if (!notification) {
+                 notification = document.createElement('div');
+                 notification.classList.add('notification');
+                 container.prepend(notification);
+             }
+             notification.textContent = message;
+             notification.style.display = 'block';
+             setTimeout(() => notification.classList.add('visible'), 10);
+             setTimeout(() => {
+                 notification.classList.remove('visible');
+                 setTimeout(() => notification.style.display = 'none', 500);
+             }, 3000);
+        }
+
+        // --- Section Switching (Existing) ---
+        function showSection(sectionId) {
+            const currentActiveSection = document.querySelector('.section:not(.hidden)');
+            const nextSection = document.getElementById(sectionId);
+
+            if (currentActiveSection && currentActiveSection !== nextSection) {
+                currentActiveSection.classList.add('fading-out');
+
+                setTimeout(() => {
+                    currentActiveSection.classList.add('hidden');
+                    currentActiveSection.classList.remove('fading-out');
+
+                    nextSection.classList.remove('hidden');
+                    setTimeout(() => {
+                        nextSection.style.opacity = '1';
+                        if (sectionId === 'profile-section') loadProfile(); // Load profile data when section is shown
+                        if (sectionId === 'reviews-section') loadReviews(); // Load reviews when section is shown
+                        if (sectionId === 'room-availability-section') renderRoomCards(); // Load room availability
+                        if (sectionId === 'maintenance-request-section') loadMaintenanceRequests();
+                        if (sectionId === 'faq-section') setupAccordions(); // Setup FAQ accordions
+                        if (sectionId === 'home-section') updateWelcomeMessage(); // Update welcome message
+                    }, 10);
+                }, 300);
+            } else if (currentActiveSection === nextSection) {
+                // Do nothing if trying to click the current section
+            } else {
+                 nextSection.classList.remove('hidden');
+                 nextSection.style.opacity = '1';
+                 // Initial loads for sections if directly navigated on first load
+                 if (sectionId === 'profile-section') loadProfile();
+                 if (sectionId === 'reviews-section') loadReviews();
+                 if (sectionId === 'room-availability-section') renderRoomCards();
+                 if (sectionId === 'maintenance-request-section') loadMaintenanceRequests();
+                 if (sectionId === 'faq-section') setupAccordions();
+                 if (sectionId === 'home-section') updateWelcomeMessage();
+            }
+
+            dropdownMenu.classList.remove('visible');
+        }
+
+      
+        document.addEventListener('DOMContentLoaded', () => {
+             document.querySelectorAll('.section').forEach(s => {
+                 if (s.id !== 'home-section') {
+                      s.classList.add('hidden');
+                 } else {
+                      s.style.opacity = '1';
+                      updateWelcomeMessage(); // Initial welcome message update
+                 }
+             });
+             renderNotifications(); // Render notifications on load
+        });
+
+        // --- Dynamic Welcome Message ---
+        function updateWelcomeMessage() {
+            const userName = localStorage.getItem('user-name');
+            const welcomeElement = document.getElementById('welcome-message');
+            if (userName) {
+                welcomeElement.textContent = `Welcome back, ${userName}!`;
+            } else {
+                welcomeElement.textContent = `Welcome to the Hostel Management System`;
+            }
+        }
+
+        // --- Profile Management (Client-Side Save/Load & Edit Mode) ---
+        function loadProfile() {
+            const profileSection = document.getElementById('profile-section');
+            const userNameInput = document.getElementById('user-name');
+            const fatherNameInput = document.getElementById('father-name');
+            const collegeNameInput = document.getElementById('college-name');
+            const userEmailInput = document.getElementById('user-email');
+
+            const displayUserName = document.getElementById('display-user-name');
+            const displayFatherName = document.getElementById('display-father-name');
+            const displayCollegeName = document.getElementById('display-college-name');
+            const displayUserEmail = document.getElementById('display-user-email');
+            const displayRoomNumber = document.getElementById('display-room-number'); // Already readonly, no input
+
+            // Load from localStorage
+            userNameInput.value = localStorage.getItem('user-name') || '';
+            fatherNameInput.value = localStorage.getItem('father-name') || '';
+            collegeNameInput.value = localStorage.getItem('college-name') || '';
+            userEmailInput.value = localStorage.getItem('user-email') || '';
+
+            // Update display fields
+            displayUserName.textContent = userNameInput.value || 'N/A';
+            displayFatherName.textContent = fatherNameInput.value || 'N/A';
+            displayCollegeName.textContent = collegeNameInput.value || 'N/A';
+            displayUserEmail.textContent = userEmailInput.value || 'N/A';
+            displayRoomNumber.textContent = localStorage.getItem('room-number') || 'B-203'; // Hardcoded fallback
+
+            // Ensure we are in view mode initially
+            if (profileSection.classList.contains('edit-mode')) {
+                profileSection.classList.remove('edit-mode');
+            }
+             // Clear any previous error messages
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        }
+
+        function toggleEditMode() {
+            const profileSection = document.getElementById('profile-section');
+            profileSection.classList.toggle('edit-mode');
+            // When entering edit mode, ensure inputs are enabled if needed
+            if (profileSection.classList.contains('edit-mode')) {
+                document.getElementById('user-name').focus();
+            } else {
+                 // When exiting edit mode (via cancel), reload profile to revert changes
+                loadProfile();
+            }
+             // Clear any previous error messages
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        }
+
+
+        function validateProfileForm() {
+            let isValid = true;
+            const userName = document.getElementById('user-name');
+            const fatherName = document.getElementById('father-name');
+            const collegeName = document.getElementById('college-name');
+            const userEmail = document.getElementById('user-email');
+
+            // Clear previous errors
+            document.getElementById('error-user-name').textContent = '';
+            document.getElementById('error-father-name').textContent = '';
+            document.getElementById('error-college-name').textContent = '';
+            document.getElementById('error-user-email').textContent = '';
+
+            if (userName.value.trim() === '') {
+                document.getElementById('error-user-name').textContent = 'Name is required.';
+                isValid = false;
+            }
+            if (fatherName.value.trim() === '') {
+                document.getElementById('error-father-name').textContent = "Father's Name is required.";
+                isValid = false;
+            }
+            if (collegeName.value.trim() === '') {
+                document.getElementById('error-college-name').textContent = 'College Name is required.';
+                isValid = false;
+            }
+            if (userEmail.value.trim() === '') {
+                document.getElementById('error-user-email').textContent = 'Email is required.';
+                isValid = false;
+            } else if (!/^\S+@\S+\.\S+$/.test(userEmail.value)) { // Basic email regex
+                document.getElementById('error-user-email').textContent = 'Invalid email format.';
+                isValid = false;
+            }
+            return isValid;
+        }
+
+
+        function saveProfile(button) {
+            if (!validateProfileForm()) {
+                addNotification('Please fill in all required profile fields correctly.');
+                return;
+            }
+
+            button.classList.add('loading');
+            button.innerHTML = 'Saving... <div class="loading-spinner"></div>';
+            button.disabled = true;
+
+            setTimeout(() => {
+                localStorage.setItem('user-name', document.getElementById('user-name').value);
+                localStorage.setItem('father-name', document.getElementById('father-name').value);
+                localStorage.setItem('college-name', document.getElementById('college-name').value);
+                localStorage.setItem('user-email', document.getElementById('user-email').value);
+                // room-number is readonly, not saved by user
+
+                loadProfile(); // Re-render display fields
+                toggleEditMode(); // Switch back to view mode
+
+                addNotification('Your profile has been successfully updated.');
+
+                button.classList.remove('loading');
+                button.innerHTML = 'Save Profile';
+                button.disabled = false;
+                updateWelcomeMessage(); // Update welcome message on home page
+            }, 1000); // Simulate saving delay
+        }
+
+        // --- Photo Preview (Existing) ---
+        function previewPhoto() {
+            const fileInput = document.getElementById('upload-photo');
+            const previewImg = document.getElementById('photo-preview');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    previewImg.src = e.target.result;
+                    previewImg.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImg.classList.add('hidden');
+                previewImg.src = '';
+            }
+        }
+
+        // --- Fees Management ---
+        function markFeesPaid(button) {
+            button.classList.add('loading');
+            button.innerHTML = 'Processing... <div class="loading-spinner"></div>';
+            button.disabled = true;
+
+            setTimeout(() => {
+                const paymentStatusDisplay = document.getElementById('payment-status-display');
+                const currentDate = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+                paymentStatusDisplay.innerHTML = `Last Payment: ${currentDate} (₹5000)<br>Next Due Date: October 30, 2023<br>Status: <strong style="color: #27ae60;">Paid</strong>`;
+                addNotification('Your fees have been marked as paid. Thank you!');
+                
+                button.classList.remove('loading');
+                button.innerHTML = 'Mark Fees as Paid (Simulated)';
+                button.disabled = false;
+            }, 1500); // Simulate payment processing
+        }
+
+        // --- Fees Reminder (Client-Side Save/Load) ---
+        function setCustomReminder(button) {
+            const reminderDateInput = document.getElementById('set-reminder');
+            const selectedDate = reminderDateInput.value;
+
+            if (selectedDate) {
+                button.classList.add('loading');
+                button.innerHTML = 'Setting... <div class="loading-spinner"></div>';
+                button.disabled = true;
+
+                setTimeout(() => {
+                    localStorage.setItem('custom-reminder-date', selectedDate);
+                    addNotification(`Custom reminder set for ${new Date(selectedDate).toLocaleDateString()}.`);
+                    button.classList.remove('loading');
+                    button.innerHTML = 'Set Reminder';
+                    button.disabled = false;
+                }, 800);
+            } else {
+                addNotification('Please select a date for the reminder.');
+            }
+        }
+
+        // Load custom reminder on section load
+        document.addEventListener('DOMContentLoaded', () => {
+            const reminderDateInput = document.getElementById('set-reminder');
+            if (reminderDateInput) {
+                reminderDateInput.value = localStorage.getItem('custom-reminder-date') || '';
+            }
+        });
+
+        // --- Reviews Section (Client-Side Save/Load & Filter) ---
+        let reviews = JSON.parse(localStorage.getItem('reviews')) || [
+            { name: "Ananya Singh", date: "September 1, 2023", text: "Great facilities and very supportive staff. The food quality is also good!" },
+            { name: "Rahul Verma", date: "August 28, 2023", text: "Clean rooms and peaceful environment. Highly recommend for students." },
+            { name: "Sneha Reddy", date: "August 15, 2023", text: "The common areas are well-maintained, and the security is excellent. Wifi could be faster sometimes." }
+        ];
+
+        function renderReviews(filterText = '') {
+            const reviewsList = document.getElementById('reviews-list');
+            reviewsList.innerHTML = '';
+            const filteredReviews = reviews.filter(review => 
+                review.name.toLowerCase().includes(filterText.toLowerCase()) ||
+                review.text.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            if (filteredReviews.length === 0) {
+                reviewsList.innerHTML = '<div class="display-box"><p class="empty-message">No reviews found matching your search.</p></div>';
+                return;
+            }
+
+            filteredReviews.forEach(review => {
+                const reviewItem = document.createElement('div');
+                reviewItem.classList.add('review-item');
+                reviewItem.innerHTML = `<strong>${review.name}</strong> <span>- ${review.date}</span><br>${review.text}`;
+                reviewsList.prepend(reviewItem); // Add newest first
+            });
+        }
+
+        function loadReviews() {
+            renderReviews();
+             // Clear any previous error messages
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        }
+
+        function validateReviewForm() {
+            let isValid = true;
+            const reviewerName = document.getElementById('reviewer-name');
+            const reviewText = document.getElementById('review-text');
+
+            document.getElementById('error-reviewer-name').textContent = '';
+            document.getElementById('error-review-text').textContent = '';
+
+            if (reviewerName.value.trim() === '') {
+                document.getElementById('error-reviewer-name').textContent = 'Your name is required.';
+                isValid = false;
+            }
+            if (reviewText.value.trim() === '') {
+                document.getElementById('error-review-text').textContent = 'Your review cannot be empty.';
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        function submitReview(button) {
+            if (!validateReviewForm()) {
+                addNotification('Please fill in your name and review.');
+                return;
+            }
+
+            button.classList.add('loading');
+            button.innerHTML = 'Submitting... <div class="loading-spinner"></div>';
+            button.disabled = true;
+
+            setTimeout(() => {
+                const reviewerName = document.getElementById('reviewer-name').value;
+                const reviewText = document.getElementById('review-text').value;
+                const currentDate = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                const newReview = {
+                    name: reviewerName,
+                    date: currentDate,
+                    text: reviewText
+                };
+
+                reviews.push(newReview);
+                localStorage.setItem('reviews', JSON.stringify(reviews));
+                renderReviews(); // Re-render the list with the new review
+
+                document.getElementById('reviewer-name').value = '';
+                document.getElementById('review-text').value = '';
+
+                addNotification('Thank you for your review! It has been submitted for moderation.');
+                
+                button.classList.remove('loading');
+                button.innerHTML = 'Submit Review';
+                button.disabled = false;
+            }, 1000); // Simulate submission delay
+        }
+
+        function filterReviews() {
+            const searchText = document.getElementById('review-search').value;
+            renderReviews(searchText);
+        }
+
+        // --- Room Availability (Client-Side Filter) ---
+        const allRooms = [
+            { id: 'A-101', type: 'Single', ac: 'AC', status: 'Available' },
+            { id: 'A-102', type: 'Double', ac: 'Non-AC', status: 'Occupied' },
+            { id: 'B-201', type: 'Triple', ac: 'Non-AC', status: 'Available' },
+            { id: 'B-202', type: 'Single', ac: 'AC', status: 'Occupied' },
+            { id: 'C-301', type: 'Double', ac: 'AC', status: 'Available' },
+            { id: 'C-302', type: 'Triple', ac: 'Non-AC', status: 'Available' },
+            { id: 'A-103', type: 'Single', ac: 'Non-AC', status: 'Available' },
+            { id: 'B-203', type: 'Double', ac: 'AC', status: 'Occupied' },
+            { id: 'C-303', type: 'Single', ac: 'Non-AC', status: 'Available' }
+        ];
+
+        function renderRoomCards() {
+            const roomGrid = document.getElementById('room-status-grid');
+            roomGrid.innerHTML = '';
+
+            const roomTypeFilter = document.getElementById('room-type-filter').value;
+            const roomAcFilter = document.getElementById('room-ac-filter').value;
+
+            const filteredRooms = allRooms.filter(room => {
+                const matchesType = (roomTypeFilter === 'all' || room.type.toLowerCase() === roomTypeFilter);
+                const matchesAc = (roomAcFilter === 'all' || (roomAcFilter === 'ac' && room.ac === 'AC') || (roomAcFilter === 'non-ac' && room.ac === 'Non-AC'));
+                return matchesType && matchesAc;
+            });
+
+            if (filteredRooms.length === 0) {
+                roomGrid.innerHTML = '<div class="display-box" style="grid-column: 1 / -1;"><p class="empty-message">No rooms match your filter criteria.</p></div>';
+                return;
+            }
+
+            filteredRooms.forEach(room => {
+                const roomCard = document.createElement('div');
+                roomCard.classList.add('room-card', room.status.toLowerCase());
+                roomCard.innerHTML = `
+                    <h3>Room ${room.id}</h3>
+                    <p>Status: ${room.status}</p>
+                    <p>Type: ${room.type} | ${room.ac}</p>
+                `;
+                roomGrid.appendChild(roomCard);
+            });
+        }
+
+        function filterRooms() {
+            renderRoomCards();
+            addNotification('Room availability filtered.');
+        }
+
+        // --- Gallery Section (Lightbox) ---
+        const lightboxModal = document.getElementById('lightbox-modal');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+
+        function openLightbox(imageSrc, captionText) {
+            lightboxImage.src = imageSrc;
+            lightboxCaption.textContent = captionText;
+            lightboxModal.classList.add('visible');
+        }
+
+        function closeLightbox() {
+            lightboxModal.classList.remove('visible');
+            lightboxImage.src = '';
+            lightboxCaption.textContent = '';
+        }
+
+        // Close lightbox if clicking outside content
+        lightboxModal.addEventListener('click', (e) => {
+            if (e.target === lightboxModal) {
+                closeLightbox();
+            }
+        });
+
+        // --- Maintenance Request Section (Client-Side Save/Load & Form Validation) ---
+        let maintenanceRequests = JSON.parse(localStorage.getItem('maintenanceRequests')) || [];
+
+        function renderMaintenanceRequests() {
+            const myRequestsDiv = document.getElementById('my-maintenance-requests');
+            myRequestsDiv.innerHTML = ''; // Clear existing
+
+            if (maintenanceRequests.length === 0) {
+                myRequestsDiv.innerHTML = '<p class="empty-message">No active maintenance requests.</p>';
+                return;
+            }
+
+            maintenanceRequests.forEach((request, index) => {
+                const requestItem = document.createElement('div');
+                requestItem.classList.add('display-box'); // Using display-box for consistent styling
+                requestItem.innerHTML = `
+                    <strong>${request.title}</strong><br>
+                    Category: ${request.category}<br>
+                    Urgency: <span style="color: ${request.urgency === 'high' ? '#e74c3c' : (request.urgency === 'medium' ? '#f39c12' : '#27ae60')}">${request.urgency}</span><br>
+                    Location: ${request.location}<br>
+                    Description: ${request.description}<br>
+                    Submitted: ${request.timestamp}
+                    <button style="margin-top: 10px;" onclick="resolveMaintenanceRequest(${index})">Mark as Resolved</button>
+                `;
+                myRequestsDiv.prepend(requestItem); // Newest first
+            });
+        }
+
+        function loadMaintenanceRequests() {
+            renderMaintenanceRequests();
+             // Clear any previous error messages
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        }
+
+        function validateMaintenanceForm() {
+            let isValid = true;
+            const title = document.getElementById('maintenance-title');
+            const category = document.getElementById('maintenance-category');
+            const urgency = document.getElementById('maintenance-urgency');
+            const description = document.getElementById('maintenance-description');
+
+            document.getElementById('error-maintenance-title').textContent = '';
+            document.getElementById('error-maintenance-category').textContent = '';
+            document.getElementById('error-maintenance-urgency').textContent = '';
+            document.getElementById('error-maintenance-description').textContent = '';
+
+            if (title.value.trim() === '') {
+                document.getElementById('error-maintenance-title').textContent = 'Problem title is required.';
+                isValid = false;
+            }
+            if (category.value === '') {
+                document.getElementById('error-maintenance-category').textContent = 'Please select a category.';
+                isValid = false;
+            }
+            if (urgency.value === '') {
+                document.getElementById('error-maintenance-urgency').textContent = 'Please select urgency.';
+                isValid = false;
+            }
+            if (description.value.trim() === '') {
+                document.getElementById('error-maintenance-description').textContent = 'Detailed description is required.';
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        function submitMaintenanceRequest(button) {
+            if (!validateMaintenanceForm()) {
+                addNotification('Please fill in all required fields for the maintenance request.');
+                return;
+            }
+
+            button.classList.add('loading');
+            button.innerHTML = 'Submitting... <div class="loading-spinner"></div>';
+            button.disabled = true;
+
+            setTimeout(() => {
+                const title = document.getElementById('maintenance-title').value;
+                const category = document.getElementById('maintenance-category').value;
+                const urgency = document.getElementById('maintenance-urgency').value;
+                const description = document.getElementById('maintenance-description').value;
+                const location = document.getElementById('maintenance-location').value;
+                const timestamp = new Date().toLocaleString();
+
+                const newRequest = {
+                    title, category, urgency, description, location, timestamp, status: 'Active'
+                };
+                maintenanceRequests.push(newRequest);
+                localStorage.setItem('maintenanceRequests', JSON.stringify(maintenanceRequests));
+
+                renderMaintenanceRequests(); // Update display
+
+                // Clear form
+                document.getElementById('maintenance-title').value = '';
+                document.getElementById('maintenance-category').value = '';
+                document.getElementById('maintenance-urgency').value = '';
+                document.getElementById('maintenance-description').value = '';
+
+                addNotification('Your maintenance request has been submitted successfully.');
+                
+                button.classList.remove('loading');
+                button.innerHTML = 'Submit Request';
+                button.disabled = false;
+            }, 1000); // Simulate submission delay
+        }
+
+        function resolveMaintenanceRequest(index) {
+             if (confirm('Are you sure you want to mark this request as resolved?')) {
+                maintenanceRequests.splice(index, 1); // Remove from array
+                localStorage.setItem('maintenanceRequests', JSON.stringify(maintenanceRequests));
+                renderMaintenanceRequests();
+                addNotification('Maintenance request marked as resolved.');
+             }
+        }
+
+
+        // --- FAQ Section (Accordion) ---
+        function setupAccordions() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.onclick = () => {
+                    item.classList.toggle('active');
+                    // Optional: close other open accordions
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                };
+            });
+        }
+
+        // --- Client-Side Search (Announcements) ---
+        function filterAnnouncements() {
+            const searchText = document.getElementById('announcement-search').value.toLowerCase();
+            const announcementItems = document.querySelectorAll('.announcement-item');
+            announcementItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // --- Rate My Stay ---
+        let currentRating = 0;
+        const stars = document.querySelectorAll('#rate-my-stay-stars .fa-star');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                currentRating = parseInt(star.dataset.rating);
+                highlightStars(currentRating);
+            });
+
+            star.addEventListener('mouseover', () => {
+                highlightStars(parseInt(star.dataset.rating), true);
+            });
+
+            star.addEventListener('mouseout', () => {
+                highlightStars(currentRating);
+            });
+        });
+
+        function highlightStars(rating, isHover = false) {
+            stars.forEach(star => {
+                const starRating = parseInt(star.dataset.rating);
+                if (starRating <= rating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas', 'checked');
+                } else {
+                    star.classList.remove('fas', 'checked');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        function submitFeedback(button) {
+            const feedbackComment = document.getElementById('feedback-comment').value;
+
+            if (currentRating === 0 && feedbackComment.trim() === '') {
+                addNotification('Please provide a rating or a comment for your feedback.');
+                return;
+            }
+            
+            button.classList.add('loading');
+            button.innerHTML = 'Submitting... <div class="loading-spinner"></div>';
+            button.disabled = true;
+
+            setTimeout(() => {
+                let feedbackMessage = `Feedback submitted! Rating: ${currentRating || 'N/A'} stars.`;
+                if (feedbackComment.trim() !== '') {
+                    feedbackMessage += ` Comment: "${feedbackComment.trim()}"`;
+                }
+                addNotification(feedbackMessage);
+
+                // Reset feedback form
+                currentRating = 0;
+                highlightStars(0);
+                document.getElementById('feedback-comment').value = '';
+
+                button.classList.remove('loading');
+                button.innerHTML = 'Submit Feedback';
+                button.disabled = false;
+            }, 1000); // Simulate submission delay
+        }
+
+
+        // --- Contact Admin (Existing, but now uses addNotification) ---
+        function sendMessageToAdmin(button) {
+            const message = document.getElementById('contact-message').value.trim();
+            if (message === '') {
+                addNotification('Please type a message before sending.');
+                return;
+            }
+
+            button.classList.add('loading');
+            button.innerHTML = 'Sending... <div class="loading-spinner"></div>';
+            button.disabled = true;
+
+            setTimeout(() => {
+                addNotification('Your message has been successfully sent to the admin!');
+                document.getElementById('contact-message').value = ''; // Clear message
+                
+                button.classList.remove('loading');
+                button.innerHTML = 'Send Message';
+                button.disabled = false;
+            }, 1000); // Simulate sending delay
+        }
+
+    </script>
+
+</body>
+</html>
